@@ -12,6 +12,21 @@ export class Config {
 
     FLAG_USE_SYSTEM_CALL_UI = false;
 
+    private mUserId: string;
+
+    private mUseSystemCall: boolean;
+
+    private mCallSession: CallSession;
+
+    private mVideoDimension =
+        io.agora.rtc.video.VideoEncoderConfiguration.VD_640x480;
+
+    private mFrameRate =
+        io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
+
+    private mOrientation =
+        io.agora.rtc.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT;
+        
     constructor(context: android.content.Context) {
         this.initUserId(context);
         this.checkSystemCallSupport(context);
@@ -111,18 +126,5 @@ export class Config {
         }
     }
 
-    private mUserId: string;
-
-    private mUseSystemCall: boolean;
-
-    private mCallSession: CallSession;
-
-    private mVideoDimension =
-        io.agora.rtc.video.VideoEncoderConfiguration.VD_640x480;
-
-    private mFrameRate =
-        io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15;
-
-    private mOrientation =
-        io.agora.rtc.video.VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT;
+ 
 }

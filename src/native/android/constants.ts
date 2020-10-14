@@ -1,6 +1,6 @@
 export class Constants {
 
-    public static SP_NAME = "openduo-sp";
+    public static SP_NAME = "open-call-sp";
     public static PREF_USER_ID = "user-call-id";
 
     public static CS_KEY_UID = "cs-key-uid";
