@@ -1,4 +1,4 @@
-import { Constants } from "../constants";
+import { Constants } from "./constants";
 
 export class CallReceiver extends android.content.BroadcastReceiver {
     private static TAG: string = CallReceiver.class.getSimpleName();

@@ -1,9 +1,9 @@
-import { Constants } from "../constants";
-import { CallSession } from "../calling/call-session";
-import { Connection } from "../calling/connection";
-import { ConnectionService } from "../calling/connection-service";
-import { SPUtils } from "../utils/SPUtils";
-import { UserUtil } from "../utils/UserUtil";
+import { Constants } from "./constants";
+import { CallSession } from "./call-session";
+import { Connection } from "./connection";
+import { ConnectionService } from "./connection-service";
+import { SPUtils } from "./utils/SPUtils";
+import { UserUtil } from "./utils/UserUtil";
 import * as appModule from "tns-core-modules/application";
 
 export class Config {

@@ -1,9 +1,10 @@
-import { APP_KEY, Common, DEFAULT_CHANNNEL, DEFAULT_VOICE_CHANNEL, TOKEN_AGORA } from '../agora.common';
+import { APP_KEY, Common, DEFAULT_CHANNNEL, DEFAULT_VOICE_CHANNEL, TOKEN_AGORA, TOKEN_AGORA_RTM } from '../agora.common';
 import * as appModule from "tns-core-modules/application";
 import * as permissions from "nativescript-permissions";
 import { getJSON } from 'tns-core-modules/http';
-import { EngineEventListener } from '../native/android/agora/engine-event-listener';
-import { VIDEO_REQUESTED_PERMISSIONS, VOICE_REQUESTED_PERMISSIONS } from '../native/android/permissions';
+import { EngineEventListener } from './engine-event-listener';
+import { VIDEO_REQUESTED_PERMISSIONS, VOICE_REQUESTED_PERMISSIONS } from './permissions';
+import { Calling } from './calling';
 
 const token = "rtm_token";
 
@@ -13,6 +14,8 @@ export class Agora extends Common {
     mRtmClient: io.agora.rtm.RtmClient;
     rtmCallManager: io.agora.rtm.RtmCallManager;
 
+    public mRemoteInvitation: io.agora.rtm.RemoteInvitation;
+
     private localFrameLayout;
     private localSurfaceView;
 
@@ -20,6 +23,8 @@ export class Agora extends Common {
 
     private isMuted: boolean = false;
     private isVideoHide: boolean = false;
+
+    public calling: Calling;
 
     initializeAgoraEngine(localFrameLayout): void {
 
@@ -38,14 +43,24 @@ export class Agora extends Common {
             this.rtmCallManager.setEventListener(engineEventListener);
 
             let userId = Math.floor(Math.random() * 10000).toString();
-            this.mRtmClient.login(token, userId, new io.agora.rtm.ResultCallback<java.lang.Void>({
-                onSuccess: (aVoid) => {
-                    console.log('rtm client login success');
-                },
-                onFailure: (errorInfo) => {
-                    console.log("rtm client login failed:" + errorInfo.getErrorDescription());
-                }
-            }));
+
+            console.log(TOKEN_AGORA_RTM + userId);
+
+            getJSON(TOKEN_AGORA_RTM + userId).then((res: any) => {
+                //this.mRtcEngine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
+
+                this.mRtmClient.login(res.key, userId, new io.agora.rtm.ResultCallback<java.lang.Void>({
+                    onSuccess: (aVoid) => {
+                        console.log('rtm client login success');
+                    },
+                    onFailure: (errorInfo) => {
+                        console.log("rtm client login failed:" + errorInfo.getErrorDescription());
+                    }
+                }));
+
+            });
+
+
 
             getJSON(TOKEN_AGORA).then((res: any) => {
                 this.mRtcEngine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
@@ -53,18 +68,51 @@ export class Agora extends Common {
         });
     }
 
-    initializeAgoraVoiceEngine(): void {
+    initializeAgoraVoiceEngine(callback: (userId: number) => void): void {
 
         permissions.requestPermissions(VOICE_REQUESTED_PERMISSIONS).then(x => {
+
             let engineEventListener = new EngineEventListener(this);
             this.mRtcEngine = io.agora.rtc.RtcEngine.create(appModule.android.context, APP_KEY, engineEventListener);
             this.mRtcEngine.setChannelProfile(io.agora.rtc.Constants.CHANNEL_PROFILE_COMMUNICATION);
+
+
+            this.mRtmClient = io.agora.rtm.RtmClient.createInstance(appModule.android.context, APP_KEY, engineEventListener);
+            this.rtmCallManager = this.mRtmClient.getRtmCallManager();
+            this.rtmCallManager.setEventListener(engineEventListener);
+
+            this.calling = new Calling(this.rtmCallManager);
+
+            let userId = Math.floor(Math.random() * 10000);
+
+            callback(userId);
+  
+            getJSON(TOKEN_AGORA_RTM + userId).then((res: any) => {
+
+                this.mRtmClient.login(res.key, userId.toString(), new io.agora.rtm.ResultCallback<java.lang.Void>({
+                    onSuccess: (aVoid) => {
+                        console.log('rtm client login success');
+                    },
+                    onFailure: (errorInfo) => {
+                        console.log("rtm client login failed:" + errorInfo.getErrorDescription());
+                    }
+                }));
+
+            });
+
+
             getJSON(TOKEN_AGORA).then((res: any) => {
                 this.mRtcEngine.joinChannel(res.key, DEFAULT_VOICE_CHANNEL, "Extra Optional Data", 0);
                 this.mRtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
             });
 
         });
+    }
+
+
+
+    public getCalling(): Calling {
+        return this.calling;
     }
 
     private setupVideoConfig() {

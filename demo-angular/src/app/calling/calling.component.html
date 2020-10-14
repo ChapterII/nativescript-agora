@@ -1,0 +1,17 @@
+<StackLayout>
+
+
+    <Button text="Send Call!" (tap)="onSendCall()"></Button>
+    <Button text="Cancel Call!" (tap)="onCancelCall()"></Button>
+    <Button text="Answer Call" (tap)="onAnswerCall()"></Button>
+    <Button text="Reject Call" (tap)="onRejectCall()"></Button>
+
+    <StackLayout orientation="horizontal">
+        <label style="font-size: 20;margin: 10;" text="Caller ID:"></label>
+        <label style="font-size: 20;margin: 10;" [text]="userId"></label>
+    </StackLayout>
+
+    <TextField name="code" hint="Enter text" [(ngModel)]="code" color="orangered" backgroundColor="lightyellow" style="height: 40;"></TextField>
+
+
+</StackLayout>

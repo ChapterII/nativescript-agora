@@ -21,7 +21,7 @@ module.exports = env => {
     const appComponents = env.appComponents || [];
     appComponents.push(...[
         "tns-core-modules/ui/frame",
-        "tns-core-modules/ui/frame/activity",
+        "tns-core-modules/ui/frame/activity"
     ]);
 
     const platform = env && (env.android && "android" || env.ios && "ios" || env.platform);

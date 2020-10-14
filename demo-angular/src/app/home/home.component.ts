@@ -4,6 +4,7 @@ import { Placeholder } from "tns-core-modules/ui/placeholder";
 import * as application from "tns-core-modules/application";
 import { isAndroid, isIOS, device, screen } from "tns-core-modules/platform";
 import { Color, Page, ViewBase } from "tns-core-modules/ui/page";
+import * as appModule from "tns-core-modules/application";
 
 @Component({
     selector: "Home",

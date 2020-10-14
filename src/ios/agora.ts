@@ -39,7 +39,7 @@ export class Agora extends Common {
         UIApplication.sharedApplication.idleTimerDisabled = true;
     }
 
-    initializeAgoraVoiceEngine(): void {
+    initializeAgoraVoiceEngine(callback: (userId: number) => void): void {
         this.agoraKit = AgoraRtcEngineKit.sharedEngineWithAppIdDelegate(APP_KEY, this.delegate);
         this.agoraKit.setDefaultAudioRouteToSpeakerphone(true);
         getJSON(TOKEN_AGORA).then((res: any) => {

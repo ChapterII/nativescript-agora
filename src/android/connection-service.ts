@@ -1,8 +1,9 @@
-import { Config } from "../agora/config";
-import { Constants } from "../constants";
+import { Config } from "./config";
+import { Constants } from "./constants";
 import { Connection } from "./connection";
 import * as appModule from "tns-core-modules/application";
 
+@JavaProxy("com.nativescript.agora.ConnectionService")
 export class ConnectionService extends android.telecom.ConnectionService {
 
     private static TAG = ConnectionService.class.getSimpleName();
@@ -10,7 +11,7 @@ export class ConnectionService extends android.telecom.ConnectionService {
     public SCHEME_AG = "customized_call";
 
     public onCreateIncomingConnection(
-        phoneAccount: android.telecom.PhoneAccountHandle,
+        phoneAccount: android.telecom.PhoneAccountHandle, 
         request: android.telecom.ConnectionRequest
     ): android.telecom.Connection {
 
