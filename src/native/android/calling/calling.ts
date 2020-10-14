@@ -1,12 +1,66 @@
 import { Global } from "../agora/global";
+import * as appModule from "tns-core-modules/application";
 
 @Interfaces([io.agora.rtm.RtmChannelListener, io.agora.rtm.ResultCallback])
 export class Calling {
-    
+
+    private mRole: number;
+    private mPeer: string;
+    private mChannel: string;
+    private mPlayer: android.media.MediaPlayer;
+    private mInvitationSending: boolean;
+    private mInvitationReceiving: boolean;
+
     private mRtmCallManager: io.agora.rtm.RtmCallManager;
 
     constructor(callingManager: io.agora.rtm.RtmCallManager) {
         this.mRtmCallManager = callingManager;
+    }
+
+
+    private playCallerRing(): android.media.MediaPlayer {
+
+        const uri = new android.net.Uri.Builder()
+            .scheme(android.content.ContentResolver.SCHEME_ANDROID_RESOURCE)
+            .authority(appModule.android.nativeApp.getPackageName())
+            .appendPath("raw")
+            .appendPath("filename")
+            .build();
+
+        return this.startRinging(uri);
+
+    }
+
+    private playCalleeRing(): android.media.MediaPlayer {
+
+        const uri = new android.net.Uri.Builder()
+            .scheme(android.content.ContentResolver.SCHEME_ANDROID_RESOURCE)
+            .authority(appModule.android.nativeApp.getPackageName())
+            .appendPath("raw")
+            .appendPath("filename")
+            .build();
+
+        return this.startRinging(uri);
+
+    }
+
+    private startRinging(resource: android.net.Uri): android.media.MediaPlayer {
+
+        let player = android.media.MediaPlayer.create(appModule.android.context, resource);
+        player.setLooping(true);
+        player.start();
+        return player;
+
+    }
+
+    private stopRinging(): void {
+
+        if (this.mPlayer != null && this.mPlayer.isPlaying()) {
+            this.mPlayer.stop();
+            this.mPlayer.release();
+            this.mPlayer = null;
+        }
+        
     }
 
     public inviteCall(peerUid: string, channel: string): void {
