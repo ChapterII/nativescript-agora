@@ -1,4 +1,4 @@
-# Voice and Video plugin for Nativescript
+# Voice and Video Calling in Nativescript
 
 
 ## Features
