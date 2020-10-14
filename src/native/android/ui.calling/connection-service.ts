@@ -1,11 +1,11 @@
 import { Config } from "../agora/config";
 import { Constants } from "../constants";
-import { AgoraConnection } from "./connection";
+import { Connection } from "./connection";
 import * as appModule from "tns-core-modules/application";
 
-export class AgoraConnectionService extends android.telecom.ConnectionService {
+export class ConnectionService extends android.telecom.ConnectionService {
 
-    private static TAG = AgoraConnectionService.class.getSimpleName();
+    private static TAG = ConnectionService.class.getSimpleName();
 
     public SCHEME_AG = "customized_call";
 
@@ -21,7 +21,7 @@ export class AgoraConnectionService extends android.telecom.ConnectionService {
         let role = extras.getInt(Constants.CS_KEY_ROLE);
         let videoState = extras.getInt(android.telecom.TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE);
 
-        let connection = new AgoraConnection(appModule.android.context, uid, channel, subscriber, role);
+        let connection = new Connection(appModule.android.context, uid, channel, subscriber, role);
         connection.setVideoState(videoState);
         connection.setAddress(android.net.Uri.fromParts(this.SCHEME_AG, subscriber, null), android.telecom.TelecomManager.PRESENTATION_ALLOWED);
         connection.setCallerDisplayName(subscriber, android.telecom.TelecomManager.PRESENTATION_ALLOWED);
@@ -44,7 +44,7 @@ export class AgoraConnectionService extends android.telecom.ConnectionService {
         let role = extras.getInt(Constants.CS_KEY_ROLE);
         let videoState = extras.getInt(android.telecom.TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE);
 
-        let connection = new AgoraConnection(appModule.android.context, uid, channel, subscriber, role);
+        let connection = new Connection(appModule.android.context, uid, channel, subscriber, role);
         connection.setVideoState(videoState);
         connection.setAddress(android.net.Uri.fromParts(this.SCHEME_AG, subscriber, null), android.telecom.TelecomManager.PRESENTATION_ALLOWED);
         connection.setCallerDisplayName(subscriber, android.telecom.TelecomManager.PRESENTATION_ALLOWED);

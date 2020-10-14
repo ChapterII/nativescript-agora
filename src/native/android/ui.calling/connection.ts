@@ -1,8 +1,7 @@
-import { Constants } from "../constants";
 
-export class AgoraConnection extends android.telecom.Connection {
+export class Connection extends android.telecom.Connection {
 
-    private static TAG = AgoraConnection.class.getSimpleName();
+    private static TAG = Connection.class.getSimpleName();
 
     private mContext: android.content.Context;
     private mChannel: string;
@@ -35,7 +34,6 @@ export class AgoraConnection extends android.telecom.Connection {
         this.destroy();
     }
 
-
     public onAbort(): void {
         super.onAbort();
         this.setDisconnected(new android.telecom.DisconnectCause(android.telecom.DisconnectCause.CANCELED));
@@ -47,15 +45,15 @@ export class AgoraConnection extends android.telecom.Connection {
         super.onAnswer();
         this.setDisconnected(new android.telecom.DisconnectCause(android.telecom.DisconnectCause.LOCAL)); 
 
-        // TODO: saeb review.
+        // TODO: review this code, this code should be used observation method. 
         // let intent = new android.content.Intent(this.mContext, VideoActivity.class);
-        let intent = new android.content.Intent(this.mContext, null);
-        intent.putExtra(Constants.CS_KEY_UID, this.mUid);
-        intent.putExtra(Constants.CS_KEY_CHANNEL, this.mChannel);
-        intent.putExtra(Constants.CS_KEY_SUBSCRIBER, this.mSubscriber);
-        intent.putExtra(Constants.CS_KEY_ROLE, this.mRole);
-        intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.mContext.startActivity(intent);
+        // let intent = new android.content.Intent(this.mContext, null);
+        // intent.putExtra(Constants.CS_KEY_UID, this.mUid);
+        // intent.putExtra(Constants.CS_KEY_CHANNEL, this.mChannel);
+        // intent.putExtra(Constants.CS_KEY_SUBSCRIBER, this.mSubscriber);
+        // intent.putExtra(Constants.CS_KEY_ROLE, this.mRole);
+        // intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+        // this.mContext.startActivity(intent);
     }
 
     public onReject(): void {
@@ -63,4 +61,5 @@ export class AgoraConnection extends android.telecom.Connection {
         this.setDisconnected(new android.telecom.DisconnectCause(android.telecom.DisconnectCause.REJECTED));
         this.destroy();
     }
+
 }

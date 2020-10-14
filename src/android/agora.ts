@@ -3,21 +3,15 @@ import * as appModule from "tns-core-modules/application";
 import * as permissions from "nativescript-permissions";
 import { getJSON } from 'tns-core-modules/http';
 import { EngineEventListener } from '../native/android/agora/engine-event-listener';
+import { VIDEO_REQUESTED_PERMISSIONS, VOICE_REQUESTED_PERMISSIONS } from '../native/android/permissions';
 
 const token = "rtm_token";
-
 
 export class Agora extends Common {
 
     mRtcEngine: io.agora.rtc.RtcEngine;
     mRtmClient: io.agora.rtm.RtmClient;
     rtmCallManager: io.agora.rtm.RtmCallManager;
-
-    private REQUESTED_PERMISSIONS = [
-        android.Manifest.permission.RECORD_AUDIO,
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    ];
 
     private localFrameLayout;
     private localSurfaceView;
@@ -30,7 +24,7 @@ export class Agora extends Common {
     initializeAgoraEngine(localFrameLayout): void {
 
         this.localFrameLayout = localFrameLayout;
-        permissions.requestPermissions(this.REQUESTED_PERMISSIONS).then(x => {
+        permissions.requestPermissions(VIDEO_REQUESTED_PERMISSIONS).then(x => {
 
             let engineEventListener = new EngineEventListener(this);
             this.mRtcEngine = io.agora.rtc.RtcEngine.create(appModule.android.context, APP_KEY, engineEventListener);
@@ -61,7 +55,7 @@ export class Agora extends Common {
 
     initializeAgoraVoiceEngine(): void {
 
-        permissions.requestPermissions([android.Manifest.permission.RECORD_AUDIO]).then(x => {
+        permissions.requestPermissions(VOICE_REQUESTED_PERMISSIONS).then(x => {
             let engineEventListener = new EngineEventListener(this);
             this.mRtcEngine = io.agora.rtc.RtcEngine.create(appModule.android.context, APP_KEY, engineEventListener);
             this.mRtcEngine.setChannelProfile(io.agora.rtc.Constants.CHANNEL_PROFILE_COMMUNICATION);

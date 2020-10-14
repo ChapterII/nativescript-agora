@@ -1,7 +1,7 @@
 import { Constants } from "../constants";
-import { AgoraCallSession } from "../ui.calling/call-session";
-import { AgoraConnection } from "../ui.calling/connection";
-import { AgoraConnectionService } from "../ui.calling/connection-service";
+import { CallSession } from "../ui.calling/call-session";
+import { Connection } from "../ui.calling/connection";
+import { ConnectionService } from "../ui.calling/connection-service";
 import { SPUtils } from "../utils/SPUtils";
 import { UserUtil } from "../utils/UserUtil";
 import * as appModule from "tns-core-modules/application";
@@ -56,12 +56,12 @@ export class Config {
     registerPhoneAccount(androidContext: android.content.Context): void {
 
         let accountHandleIn = new android.telecom.PhoneAccountHandle(
-            new android.content.ComponentName(androidContext, AgoraConnectionService.class),
+            new android.content.ComponentName(androidContext, ConnectionService.class),
             Constants.PA_LABEL_CALL_IN
         );
 
         let accountHandleOut = new android.telecom.PhoneAccountHandle(
-            new android.content.ComponentName(androidContext, AgoraConnectionService.class),
+            new android.content.ComponentName(androidContext, ConnectionService.class),
             Constants.PA_LABEL_CALL_OUT
         );
 
@@ -92,7 +92,7 @@ export class Config {
         telecomManager.registerPhoneAccount(phoneIn);
         telecomManager.registerPhoneAccount(phoneOut);
 
-        this.mCallSession = new AgoraCallSession();
+        this.mCallSession = new CallSession();
         this.mCallSession.setPhoneAccountIn(phoneIn);
         this.mCallSession.setPhoneAccountOut(phoneOut);
     }
@@ -105,7 +105,7 @@ export class Config {
         return this.mCallSession == null ? null : this.mCallSession.getPhoneAccountOut();
     }
 
-    public setConnection(connection: AgoraConnection): void {
+    public setConnection(connection: Connection): void {
         if (this.mCallSession != null) {
             this.mCallSession.setConnection(connection);
         }
@@ -115,7 +115,7 @@ export class Config {
 
     private mUseSystemCall: boolean;
 
-    private mCallSession: AgoraCallSession;
+    private mCallSession: CallSession;
 
     private mVideoDimension =
         io.agora.rtc.video.VideoEncoderConfiguration.VD_640x480;

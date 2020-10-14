@@ -1,10 +1,10 @@
-import { AgoraConnection } from "./connection";
+import { Connection } from "./connection";
 
-export class AgoraCallSession {
+export class CallSession {
 
     private mPhoneAccountOut: android.telecom.PhoneAccount;
     private mPhoneAccountIn: android.telecom.PhoneAccount;
-    private mConnection: AgoraConnection;
+    private mConnection: Connection;
 
     public setPhoneAccountIn(pa: android.telecom.PhoneAccount): void {
         this.mPhoneAccountIn = pa;
@@ -22,11 +22,11 @@ export class AgoraCallSession {
         return this.mPhoneAccountOut;
     }
 
-    public setConnection(connection: AgoraConnection): void {
+    public setConnection(connection: Connection): void {
         this.mConnection = connection;
     }
 
-    public getConnection(): AgoraConnection {
+    public getConnection(): Connection {
         return this.mConnection;
     }
 
