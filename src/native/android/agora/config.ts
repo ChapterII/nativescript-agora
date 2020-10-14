@@ -1,7 +1,7 @@
 import { Constants } from "../constants";
-import { CallSession } from "../ui.calling/call-session";
-import { Connection } from "../ui.calling/connection";
-import { ConnectionService } from "../ui.calling/connection-service";
+import { CallSession } from "../calling/call-session";
+import { Connection } from "../calling/connection";
+import { ConnectionService } from "../calling/connection-service";
 import { SPUtils } from "../utils/SPUtils";
 import { UserUtil } from "../utils/UserUtil";
 import * as appModule from "tns-core-modules/application";
