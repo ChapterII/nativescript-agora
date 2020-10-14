@@ -1,0 +1,43 @@
+<GridLayout rows="*">
+    <GridLayout rows="*,*" row="0">
+        <Placeholder row="0" (creatingView)="onCreatingView($event)" class="calling"></Placeholder>
+        <FlexboxLayout alignItems="stretch" row="1" id="remoteVideos">
+            <Placeholder [visibility]="firstRemoteVideo.visible ? 'visible' : 'collapsed'" (creatingView)="onCreatingRemoteView($event)" class="calling"></Placeholder>
+            <Placeholder [visibility]="secondRemoteVideo.visible ? 'visible' : 'collapsed'" (creatingView)="onCreatingRemoteView2($event)" class="calling"></Placeholder>
+        </FlexboxLayout>
+
+    </GridLayout>
+    <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
+        <StackLayout>
+            <StackLayout [class]="isMuted ? 'microphone-mute-button-muted' : 'microphone-mute-button'" (tap)="mute()">
+                <Label [visibility]="!isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe029;"
+                    textWrap="true"></Label>
+                <Label [visibility]="isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe02b;"
+                    textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="mute"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout class="switch-camera-button" (tap)="switchCamera()">
+                <Label class="mdi" text="&#xe41e;" textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="flip"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout class="end-call-button" (tap)="endCall()">
+                <Label class="mdi" text="&#xe0b1;" textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="end"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout [class]="isHideVideo ? 'microphone-mute-button-muted' : 'microphone-mute-button'"
+                (tap)="hideVideo()">
+                <Label [visibility]="!isHideVideo ? 'visible' : 'collapsed'" class="mdi" text="&#xe04b;"
+                    textWrap="true"></Label>
+                <Label [visibility]="isHideVideo ? 'visible' : 'collapsed'" class="mdi" text="&#xe04c;"
+                    textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="camera"></label>
+        </StackLayout>
+    </FlexboxLayout>
+</GridLayout>
