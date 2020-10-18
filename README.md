@@ -25,7 +25,11 @@ Agora works base on WebRTC protocol.
 * [Nativescript getting started](https://nativescript.org/getting-started-with-nativescript/)
 * [Real-time communication (WebRTC)](https://webrtc.org/)
 
-
+## License
+This software is under the MIT License (MIT).
 
 [Nativescript]: <http://nativescript.org>
 [Agora]: <http://agora.io>
+
+
+
