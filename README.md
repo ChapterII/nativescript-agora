@@ -4,6 +4,9 @@ The aim of create of this plugin is access [Nativescript] projects to [Agora] SD
 
 Agora works base on WebRTC protocol.
 
+## Release Note
+[Changelog](CHANGELOG.md)
+
 
 ## Features
 
