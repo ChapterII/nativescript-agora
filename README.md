@@ -19,6 +19,13 @@ Agora works base on WebRTC protocol.
 ### Usage
 
 
+## Resources
+
+* Complete [API Doc](https://docs.agora.io/en/) at the Developer Center
+* [Nativescript getting started](https://nativescript.org/getting-started-with-nativescript/)
+* [Real-time communication (WebRTC)](https://webrtc.org/)
+
+
 
 [Nativescript]: <http://nativescript.org>
 [Agora]: <http://agora.io>
