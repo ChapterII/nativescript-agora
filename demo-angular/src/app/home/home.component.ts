@@ -3,7 +3,7 @@ import { Agora } from "nativescript-agora";
 import { Placeholder } from "tns-core-modules/ui/placeholder";
 import * as application from "tns-core-modules/application";
 import { isAndroid, isIOS, device, screen } from "tns-core-modules/platform";
-import { Color, Page, ViewBase } from "tns-core-modules/ui/page";
+import { Color, Observable, Page, ViewBase } from "tns-core-modules/ui/page";
 import * as appModule from "tns-core-modules/application";
 
 @Component({
@@ -33,6 +33,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.agora = new Agora();
+
+
+
+        // RtcEngineEventHandler.on('onConnectionStateChanged', () => {
+        //     console.log('HI SAEB!');
+        // });
+
+        // RtcEngineEventHandlerObservable.getInstance().notify({
+        //     eventName: 'activityCreated',
+        //     object: null
+        // })
+
+
+
     }
 
     onCreatingView(args) {
@@ -56,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else {
             this.remoteRelativeLayout = UIView.alloc().initWithFrame(CGRectMake(0, 0, 0, 0));;
             args.view = this.remoteRelativeLayout;
-            this.firstRemoteVideo = { uid: null, remoteView: this.remoteRelativeLayout,visible:true };
+            this.firstRemoteVideo = { uid: null, remoteView: this.remoteRelativeLayout, visible: true };
             this.agora.initRemoteVideo(this.firstRemoteVideo);
         }
     }
@@ -70,7 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
             this.remoteRelativeLayout2 = UIView.alloc().initWithFrame(CGRectMake(0, 0, 0, 0));;
             args.view = this.remoteRelativeLayout2;
-            this.secondRemoteVideo = { uid: null, remoteView: this.remoteRelativeLayout2,visible:true };
+            this.secondRemoteVideo = { uid: null, remoteView: this.remoteRelativeLayout2, visible: true };
             this.agora.initRemoteVideo(this.secondRemoteVideo);
         }
     }
@@ -80,6 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     switchCamera() {
+        console.log("SAEB: switchCamera");
         this.agora.onSwitchCameraClicked();
     }
 
@@ -95,8 +110,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.agora.endCall();
     }
 
-    get secondVideoVisible(){
+    get secondVideoVisible() {
         console.log("Second Video Is Visible = " + this.secondRemoteVideo.visible);
         return this.secondRemoteVideo.visible;
     }
 }
+
+
+
+
+
