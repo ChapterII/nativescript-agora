@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     hideVideo() {
         this.isHideVideo = this.agora.onVideoMuteClicked();
-    }
+    }  
 
     endCall() {
         this.agora.endCall();

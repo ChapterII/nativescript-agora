@@ -28,7 +28,7 @@ export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
 
     }
 
-    public onConnectionStateChanged(status: number, reason: number): void {
+    public onConnectionStateChanged(status: number, reason: number): void {  
 
         RtcEngineEventHandlerObservable.getInstance().notifyChanges(
             'onConnectionStateChanged',

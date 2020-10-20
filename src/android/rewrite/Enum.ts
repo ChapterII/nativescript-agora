@@ -1683,10 +1683,10 @@ export enum VideoCodecProfileType {
  * Video frame rate.
  */
 export enum VideoFrameRate {
-    /**
-     * -1: The minimum frame rate of the video.
-     */
-    Min = -1,
+    // /**
+    //  * -1: The minimum frame rate of the video.
+    //  */
+    // Min = -1,
     /**
      * 1: 1 fps.
      */
@@ -1711,10 +1711,10 @@ export enum VideoFrameRate {
      * 30: 30 fps.
      */
     Fps30 = 30,
-    /**
-     * 60: 60 fps (macOS only).
-     */
-    Fps60 = 60,
+    // /**
+    //  * 60: 60 fps (macOS only).
+    //  */
+    // Fps60 = 60,
 }
 
 /**

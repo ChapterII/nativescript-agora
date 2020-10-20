@@ -1,7 +1,42 @@
 <StackLayout>
 
+    <RtcView streamMode="video"  style="height:50%"> </RtcView>
 
-    <Button text="Send Call!" (tap)="onSendCall()"></Button>
+
+    <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
+        <StackLayout>
+            <StackLayout [class]="isMuted ? 'microphone-mute-button-muted' : 'microphone-mute-button'" (tap)="mute()">
+                <Label [visibility]="!isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe029;"
+                    textWrap="true"></Label>
+                <Label [visibility]="isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe02b;"
+                    textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="mute"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout class="switch-camera-button" (tap)="switchCamera()">
+                <Label class="mdi" text="&#xe41e;" textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="flip"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout class="end-call-button" (tap)="endCall()">
+                <Label class="mdi" text="&#xe0b1;" textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="end"></label>
+        </StackLayout>
+        <StackLayout>
+            <StackLayout [class]="isHideVideo ? 'microphone-mute-button-muted' : 'microphone-mute-button'"
+                (tap)="hideVideo()">
+                <Label [visibility]="!isHideVideo ? 'visible' : 'collapsed'" class="mdi" text="&#xe04b;"
+                    textWrap="true"></Label>
+                <Label [visibility]="isHideVideo ? 'visible' : 'collapsed'" class="mdi" text="&#xe04c;"
+                    textWrap="true"></Label>
+            </StackLayout>
+            <label class="text-center" text="camera"></label>
+        </StackLayout>
+    </FlexboxLayout>
+    <!-- <Button text="Send Call!" (tap)="onSendCall()"></Button>
     <Button text="Cancel Call!" (tap)="onCancelCall()"></Button>
     <Button text="Answer Call" (tap)="onAnswerCall()"></Button>
     <Button text="Reject Call" (tap)="onRejectCall()"></Button>
@@ -11,7 +46,7 @@
         <label style="font-size: 20;margin: 10;" [text]="userId"></label>
     </StackLayout>
 
-    <TextField name="code" hint="Enter text" [(ngModel)]="code" color="orangered" backgroundColor="lightyellow" style="height: 40;"></TextField>
+    <TextField name="code" hint="Enter text" [(ngModel)]="code" color="orangered" backgroundColor="lightyellow" style="height: 40;"></TextField> -->
 
 
 </StackLayout>
