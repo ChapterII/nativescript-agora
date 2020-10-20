@@ -1,6 +1,6 @@
 <StackLayout>
 
-    <RtcView streamMode="video"  style="height:50%"> </RtcView>
+    <RtcView streamMode="audio"  style="height:50%"> </RtcView>
 
 
     <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
@@ -10,7 +10,7 @@
                     textWrap="true"></Label>
                 <Label [visibility]="isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe02b;"
                     textWrap="true"></Label>
-            </StackLayout>
+            </StackLayout>  
             <label class="text-center" text="mute"></label>
         </StackLayout>
         <StackLayout>
@@ -18,7 +18,7 @@
                 <Label class="mdi" text="&#xe41e;" textWrap="true"></Label>
             </StackLayout>
             <label class="text-center" text="flip"></label>
-        </StackLayout>
+        </StackLayout>  
         <StackLayout>
             <StackLayout class="end-call-button" (tap)="endCall()">
                 <Label class="mdi" text="&#xe0b1;" textWrap="true"></Label>

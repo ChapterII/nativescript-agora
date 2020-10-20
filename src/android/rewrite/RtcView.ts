@@ -11,6 +11,10 @@ import { Property } from "tns-core-modules/ui/core/properties";
 
 export type streamMode = 'video' | 'audio';
 
+export const streamModeProperty = new Property<RtcView, streamMode>({
+    name: "streamMode"
+});
+
 export class RtcView extends View {
 
     engine: RtcEngine;
@@ -38,7 +42,11 @@ export class RtcView extends View {
 
             getJSON(TOKEN_AGORA).then((res: any) => {
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
-                this.setupLocalVideo();
+
+                if (this.streamMode == 'video') {
+                    this.setupLocalVideo();
+                }
+                
             });
         });
 
@@ -63,9 +71,6 @@ export class RtcView extends View {
 }
 
 
-export const streamModeProperty = new Property<RtcView,streamMode> ({
-    name: "streamMode"
-});
+
 
 streamModeProperty.register(RtcView);
-   
