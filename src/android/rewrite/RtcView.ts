@@ -56,15 +56,16 @@ export class RtcView extends View {
     }
 
 
-    [streamModeProperty.setNative](mode: streamMode) {
-        this.streamMode = mode;
+    [streamModeProperty.setNative](streamMode: streamMode) {
+        this.streamMode = streamMode;
     }
 
 }
 
 
-export const streamModeProperty = new Property({
+export const streamModeProperty = new Property<RtcView,streamMode> ({
     name: "streamMode"
 });
 
 streamModeProperty.register(RtcView);
+   
