@@ -67,3 +67,4 @@ export const streamModeProperty = new Property({
     name: "streamMode"
 });
 
+streamModeProperty.register(RtcView);
