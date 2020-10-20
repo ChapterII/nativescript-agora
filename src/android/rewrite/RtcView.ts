@@ -7,6 +7,7 @@ import * as appModule from "tns-core-modules/application";
 import * as permissions from "nativescript-permissions";
 import { VIDEO_REQUESTED_PERMISSIONS } from "../permissions";
 import { VideoEncoderConfiguration } from "./Classes";
+import { Property } from "tns-core-modules/ui/core/properties";
 
 export type streamMode = 'video' | 'audio';
 
@@ -14,7 +15,7 @@ export class RtcView extends View {
 
     engine: RtcEngine;
 
-    private streamMode: streamMode = 'video';
+    private streamMode: streamMode;
 
     constructor() {
 
@@ -54,5 +55,15 @@ export class RtcView extends View {
         this.nativeView.addView(mLocalView);
     }
 
+
+    [streamModeProperty.setNative](mode: streamMode) {
+        this.streamMode = mode;
+    }
+
 }
+
+
+export const streamModeProperty = new Property({
+    name: "streamMode"
+});
 
