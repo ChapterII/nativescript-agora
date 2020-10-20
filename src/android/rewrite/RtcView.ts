@@ -14,12 +14,24 @@ export type streamMode = 'video' | 'audio';
 export const streamModeProperty = new Property<RtcView, streamMode>({
     name: "streamMode"
 });
+  
+export const channelProfileProperty = new Property<RtcView, ChannelProfile>({
+    name: "channelProfile"
+});
+
+export const clientRoleProperty = new Property<RtcView, ClientRole>({
+    name: "clientRole"
+});
+
 
 export class RtcView extends View {
+
 
     engine: RtcEngine;
 
     private streamMode: streamMode;
+    private channelProfile: ChannelProfile;
+    private clientRole: ClientRole;
 
     constructor() {
 
@@ -27,8 +39,8 @@ export class RtcView extends View {
 
         this.engine = new RtcEngine();
         this.engine.create(APP_KEY);
-        this.engine.channelProfile = ChannelProfile.Communication;
-        this.engine.clientRole = ClientRole.Audience;
+        this.engine.channelProfile = this.channelProfile;
+        this.engine.clientRole = this.clientRole;
 
     }
 
@@ -46,7 +58,7 @@ export class RtcView extends View {
                 if (this.streamMode == 'video') {
                     this.setupLocalVideo();
                 }
-                
+
             });
         });
 
@@ -68,9 +80,18 @@ export class RtcView extends View {
         this.streamMode = streamMode;
     }
 
+
+    [channelProfileProperty.setNative](channelProfile: ChannelProfile) {
+        this.channelProfile = channelProfile;
+    }
+
+    [clientRoleProperty.setNative](clientRole: ClientRole) {
+        this.clientRole = clientRole;
+    }
+
 }
 
 
-
-
 streamModeProperty.register(RtcView);
+channelProfileProperty.register(RtcView);
+clientRoleProperty.register(RtcView);

@@ -10,11 +10,4 @@ export class RtcEngineCommon extends Observable {
 }
 
 
-export const channelProfileProperty = new Property({
-    name: "channelProfile"
-});
-
-export const clientRoleProperty = new Property({
-    name: "clientRole"
-});
 

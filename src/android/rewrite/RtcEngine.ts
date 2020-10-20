@@ -2,7 +2,7 @@ import { Application } from "tns-core-modules";
 import { BeautyOptions, UserInfo, VideoEncoderConfiguration } from "./Classes";
 import { EngineEventListener } from "./EngineEventListener";
 import { AudioProfile, AudioScenario, ChannelProfile, ClientRole, ConnectionStateType, LogFilter, VideoOutputOrientationMode } from "./Enum";
-import { channelProfileProperty, clientRoleProperty, RtcEngineCommon } from "./RtcEngineCommon";
+import { RtcEngineCommon } from "./RtcEngineCommon";
 
 type Rate = 1 | 2 | 3 | 4 | 5;
 
@@ -17,19 +17,15 @@ export class RtcEngine extends RtcEngineCommon {
         this.engineEventListener = new EngineEventListener();
         this.engine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
         this.engine.enableDualStreamMode(true);
-        this.engine.setChannelProfile(ChannelProfile.Communication);
-        this.engine.setClientRole(ClientRole.Audience);
 
-        /*
-            if (this.clientRole) {
-                this.engine.setClientRole(this.clientRole);
-            }
-
-            if (this.channelProfile) {
+        
+        if (this.channelProfile) {
             this.engine.setChannelProfile(this.channelProfile);
-            }
-        */
+        }
 
+        if (this.clientRole) {
+            this.engine.setClientRole(this.clientRole);
+        }
 
     }
 
@@ -268,19 +264,6 @@ export class RtcEngine extends RtcEngineCommon {
     public stopAudioMixing(): void {
         this.engine.stopAudioMixing();
     }
-
-
-    /* remark: review the code. 
-
-    [channelProfileProperty.setNative](profile: ChannelProfile) {
-        return this.engine.setChannelProfile(profile);
-    }
-
-    [clientRoleProperty.setNative](role: ClientRole) {
-        this.engine.setClientRole(role);
-    }
-   
-    */
-
+    
 
 }
