@@ -8,6 +8,7 @@ import * as permissions from "nativescript-permissions";
 import { VIDEO_REQUESTED_PERMISSIONS } from "../permissions";
 import { VideoEncoderConfiguration } from "./Classes";
 import { Property } from "tns-core-modules/ui/core/properties";
+import { RtcEventHandler } from "./RtcEventHandler";
 
 export type streamMode = 'local' | 'remote';
 export type viewMode = 'local' | 'remote';
@@ -39,6 +40,19 @@ export class RtcView extends View {
         this.engine.clientRole = ClientRole.Audience;
         this.engine.create(APP_KEY);
 
+        this.engine.on(RtcEngine.onRemoteVideoSetupChangeEvent, (data: any) => {
+            const value = data.value;
+            if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
+                //this.removeRemoteVideo(uid);
+            } else if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
+                console.log("User Decoding");
+                this.setupRemoteVideo(value.uid);
+            }
+        });
+        // RtcEventHandler.on("onRemoteVideoStateChanged",(data) => {
+        //     console.log(data);
+        // })
+
     }
 
     nativeView: android.widget.LinearLayout;
@@ -52,7 +66,7 @@ export class RtcView extends View {
             getJSON(TOKEN_AGORA).then((res: any) => {
 
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
-                
+
                 let userId = parseInt(Math.floor(Math.random() * 10000).toString());
 
                 if (this.streamMode == 'local') {

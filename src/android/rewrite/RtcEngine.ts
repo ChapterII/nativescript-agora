@@ -1,4 +1,4 @@
-import { Application } from "tns-core-modules";
+import { Application, EventData } from "tns-core-modules";
 import { BeautyOptions, UserInfo, VideoEncoderConfiguration } from "./Classes";
 import { EngineEventListener } from "./EngineEventListener";
 import { AudioProfile, AudioScenario, ChannelProfile, ClientRole, ConnectionStateType, LogFilter, VideoOutputOrientationMode } from "./Enum";
@@ -12,9 +12,12 @@ export class RtcEngine extends RtcEngineCommon {
     engine: io.agora.rtc.RtcEngine;
     engineEventListener: EngineEventListener;
 
+    public static onRemoteVideoSetupChangeEvent = 'onRemoteVideoSetup';
+
     public create(appId): void {
 
-        this.engineEventListener = new EngineEventListener();
+        this.engineEventListener = new EngineEventListener(this);
+        
         this.engine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
         this.engine.enableDualStreamMode(true);
         
@@ -27,7 +30,6 @@ export class RtcEngine extends RtcEngineCommon {
         }
 
     }
-
     public CreateRendererView(context: any): android.view.SurfaceView {
         return io.agora.rtc.RtcEngine.CreateRendererView(context);
     }

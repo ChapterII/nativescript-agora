@@ -1,12 +1,34 @@
 import { Observable } from "tns-core-modules";
-import { RtcEvents } from "./RtcEventHandler";
+import { RtcEngine } from "./RtcEngine";
+import { RtcEventHandler, RtcEvents } from "./RtcEventHandler";
 
 
 @Interfaces([io.agora.rtm.RtmClientListener, io.agora.rtm.RtmCallEventListener])
 export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
 
-    constructor() {
+    owner: WeakRef<RtcEngine>;
+    constructor(owner: RtcEngine) {
         super();
+        this.owner = new WeakRef(owner);
+    }
+
+    onRemoteVideoStateChanged(uid, state, reason, elapsed) {
+
+        // console.log("onRemoteVideoStateChanged")  
+        // if (state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
+        //     console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_STOPPED")
+        // } else if (state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
+        //     console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_DECODING")  
+
+        // }
+        const owner = this.owner.get();
+        if (owner) {
+            owner.notify({ eventName: RtcEngine.onRemoteVideoSetupChangeEvent, object: owner, value: { uid: uid, elapsed: elapsed, state: state, reason: reason } });
+        }
+        // RtcEngineEventHandlerObservable.getInstance().notifyChanges(
+        //     'onRemoteVideoStateChanged',
+        //     { uid: uid, elapsed: elapsed }
+        // );
 
     }
 
@@ -28,7 +50,7 @@ export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
 
     }
 
-    public onConnectionStateChanged(status: number, reason: number): void {  
+    public onConnectionStateChanged(status: number, reason: number): void {
 
         RtcEngineEventHandlerObservable.getInstance().notifyChanges(
             'onConnectionStateChanged',
@@ -196,7 +218,7 @@ export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
 
     onUserJoined(uid: number, elapsed: number) {
 
-        console.log("onUserJoined")  
+        console.log("onUserJoined")
 
         RtcEngineEventHandlerObservable.getInstance().notifyChanges(
             'onUserJoined',
@@ -205,22 +227,7 @@ export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
 
     }
 
-    onRemoteVideoStateChanged(uid, state, reason, elapsed) {
 
-        console.log("onRemoteVideoStateChanged")  
-        if (state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
-            console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_STOPPED")
-        } else if (state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
-            console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_DECODING")  
-
-        }
-
-        RtcEngineEventHandlerObservable.getInstance().notifyChanges(
-            'onRemoteVideoStateChanged',
-            { uid: uid, elapsed: elapsed }
-        );
-
-    }
 
     onTokenPrivilegeWillExpire() {
 
