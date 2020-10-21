@@ -1,9 +1,10 @@
 <StackLayout>
 
-    <RtcView streamMode="video"  channelProfile="Communication" clientRole="Audience" style="height:50%"> </RtcView>
-  
-
-    <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
+    <RtcView streamMode="local"  style="height:50%"> </RtcView>
+    <RtcView streamMode="remote" style="height:50%"> </RtcView>
+       
+ 
+    <!-- <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
         <StackLayout>
             <StackLayout [class]="isMuted ? 'microphone-mute-button-muted' : 'microphone-mute-button'" (tap)="mute()">
                 <Label [visibility]="!isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe029;"
@@ -35,7 +36,7 @@
             </StackLayout>
             <label class="text-center" text="camera"></label>
         </StackLayout>
-    </FlexboxLayout>
+    </FlexboxLayout> -->
     <!-- <Button text="Send Call!" (tap)="onSendCall()"></Button>
     <Button text="Cancel Call!" (tap)="onCancelCall()"></Button>
     <Button text="Answer Call" (tap)="onAnswerCall()"></Button>
@@ -44,8 +45,8 @@
     <StackLayout orientation="horizontal">
         <label style="font-size: 20;margin: 10;" text="Caller ID:"></label>
         <label style="font-size: 20;margin: 10;" [text]="userId"></label>
-    </StackLayout>
-
+    </StackLayout>  
+  
     <TextField name="code" hint="Enter text" [(ngModel)]="code" color="orangered" backgroundColor="lightyellow" style="height: 40;"></TextField> -->
 
 

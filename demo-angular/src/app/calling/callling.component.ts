@@ -1,24 +1,18 @@
 import { Component, OnInit } from "@angular/core";
-// import { Agora } from "nativescript-agora";
-// import { Agora } from "nativescript-agora";
 import { registerElement } from "nativescript-angular/element-registry";
-import { Application } from "tns-core-modules";
-import { RtcView } from "../../../../src/agora.android";
-
 registerElement("RtcView", () => require("nativescript-agora").RtcView);
 
   
-
 @Component({
     selector: 'calling',
     templateUrl: './calling.component.html',
     styleUrls: ['./calling.component.css']
 })
 export class CallingCommponent implements OnInit {
-
+  
     // agora: Agora;
     userId: number;
-    code: string;  
+    code: string;    
 
 
     isMuted: boolean = false;

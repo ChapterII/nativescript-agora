@@ -17,7 +17,6 @@ export class RtcEngine extends RtcEngineCommon {
         this.engineEventListener = new EngineEventListener();
         this.engine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
         this.engine.enableDualStreamMode(true);
-
         
         if (this.channelProfile) {
             this.engine.setChannelProfile(this.channelProfile);
@@ -41,6 +40,17 @@ export class RtcEngine extends RtcEngineCommon {
             uid)
         );
     }
+
+
+    public setupRemoteVideo(view: globalAndroid.view.View, renderMode: number, uid: number): void {
+
+        this.engine.setupRemoteVideo(new io.agora.rtc.video.VideoCanvas(
+            view,
+            io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN,
+            uid)
+        );
+    }
+
 
     public switchCamera(): void {
         this.engine.switchCamera();

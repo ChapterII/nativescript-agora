@@ -9,38 +9,35 @@ import { VIDEO_REQUESTED_PERMISSIONS } from "../permissions";
 import { VideoEncoderConfiguration } from "./Classes";
 import { Property } from "tns-core-modules/ui/core/properties";
 
-export type streamMode = 'video' | 'audio';
+export type streamMode = 'local' | 'remote';
+export type viewMode = 'local' | 'remote';
+
 
 export const streamModeProperty = new Property<RtcView, streamMode>({
     name: "streamMode"
 });
-  
-export const channelProfileProperty = new Property<RtcView, ChannelProfile>({
-    name: "channelProfile"
-});
 
-export const clientRoleProperty = new Property<RtcView, ClientRole>({
-    name: "clientRole"
-});
 
+export const viewModeProperty = new Property({
+    name: "viewMode"
+});
 
 export class RtcView extends View {
-
 
     engine: RtcEngine;
 
     private streamMode: streamMode;
-    private channelProfile: ChannelProfile;
-    private clientRole: ClientRole;
+    private viewModel: viewMode;
+
 
     constructor() {
 
         super();
 
         this.engine = new RtcEngine();
+        this.engine.channelProfile = ChannelProfile.Communication;
+        this.engine.clientRole = ClientRole.Audience;
         this.engine.create(APP_KEY);
-        this.engine.channelProfile = this.channelProfile;
-        this.engine.clientRole = this.clientRole;
 
     }
 
@@ -53,10 +50,15 @@ export class RtcView extends View {
         permissions.requestPermissions(VIDEO_REQUESTED_PERMISSIONS).then(x => {
 
             getJSON(TOKEN_AGORA).then((res: any) => {
-                this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
 
-                if (this.streamMode == 'video') {
-                    this.setupLocalVideo();
+                this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
+                
+                let userId = parseInt(Math.floor(Math.random() * 10000).toString());
+
+                if (this.streamMode == 'local') {
+                    this.setupLocalVideo(userId);
+                } else if (this.streamMode == 'remote') {
+                    this.setupRemoteVideo(userId);
                 }
 
             });
@@ -66,32 +68,28 @@ export class RtcView extends View {
     }
 
 
-    private setupLocalVideo(): void {
+    private setupLocalVideo(uid: number): void {
         this.engine.enableVideo();
         this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
         let mLocalView = io.agora.rtc.RtcEngine.CreateRendererView(appModule.android.context);
         mLocalView.setZOrderMediaOverlay(true);
-        this.engine.setupLocalVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, 0);
+        this.engine.setupLocalVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, uid);
+        mLocalView.setTag(String(uid));
         this.nativeView.addView(mLocalView);
     }
 
-
-    [streamModeProperty.setNative](streamMode: streamMode) {
-        this.streamMode = streamMode;
-    }
-
-
-    [channelProfileProperty.setNative](channelProfile: ChannelProfile) {
-        this.channelProfile = channelProfile;
-    }
-
-    [clientRoleProperty.setNative](clientRole: ClientRole) {
-        this.clientRole = clientRole;
+    private setupRemoteVideo(uid: number): void {
+        this.engine.enableVideo();
+        this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
+        let mLocalView = io.agora.rtc.RtcEngine.CreateRendererView(appModule.android.context);
+        mLocalView.setZOrderMediaOverlay(true);
+        this.engine.setupRemoteVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, uid);
+        mLocalView.setTag(String(uid));
+        this.nativeView.addView(mLocalView);
     }
 
 }
 
 
+viewModeProperty.register(RtcView);
 streamModeProperty.register(RtcView);
-channelProfileProperty.register(RtcView);
-clientRoleProperty.register(RtcView);
