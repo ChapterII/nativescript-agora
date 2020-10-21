@@ -41,12 +41,14 @@ export class RtcView extends View {
         this.engine.create(APP_KEY);
 
         this.engine.on(RtcEngine.onRemoteVideoSetupChangeEvent, (data: any) => {
-            const value = data.value;
-            if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
-                //this.removeRemoteVideo(uid);
-            } else if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
-                console.log("User Decoding");
-                this.setupRemoteVideo(value.uid);
+            if (this.streamMode == "remote") {
+                const value = data.value;
+                if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
+                    //this.removeRemoteVideo(uid);
+                } else if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
+                    console.log("User Decoding");
+                    this.setupRemoteVideo(value.uid);
+                }
             }
         });
         // RtcEventHandler.on("onRemoteVideoStateChanged",(data) => {
@@ -66,14 +68,16 @@ export class RtcView extends View {
             getJSON(TOKEN_AGORA).then((res: any) => {
 
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
-
+                this.engine.enableVideo();
+                this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
                 let userId = parseInt(Math.floor(Math.random() * 10000).toString());
 
                 if (this.streamMode == 'local') {
                     this.setupLocalVideo(userId);
-                } else if (this.streamMode == 'remote') {
-                    this.setupRemoteVideo(userId);
                 }
+                // } else if (this.streamMode == 'remote') {
+                //     this.setupRemoteVideo(userId);
+                // }
 
             });
         });
