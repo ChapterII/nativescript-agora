@@ -92,7 +92,7 @@ export class RtcView extends View {
 
         Application.on(Application.suspendEvent, (args) => {
             io.agora.rtc.RtcEngine.destroy();
-        });   
+        });
 
         this.page.actionBarHidden = true;
     }
@@ -106,31 +106,39 @@ export class RtcView extends View {
     }
 
     disposeNativeView() {
-
         io.agora.rtc.RtcEngine.destroy();
-      }
+    }
 
     private views: Map<number, StackLayout> = new Map();
 
 
     removeRemoteVideo(uid) {
-          
-        let view = this.views.get(uid);
 
-        console.log('removeRemoteVideo');
-        console.log('views.size: ' + this.views.size);
+        let view = this.views.get(uid);
 
         if (view) {
             var viewContainer = <FlexboxLayout>this.page.getViewById(this.remoteContainerId);
             viewContainer.removeChild(view);
             this.views.delete(uid);
         }
-        console.log('views.size: ' + this.views.size);
 
         if (this.views.size == 0) {
             let params = this.nativeView.getLayoutParams();
             params.height = screen.mainScreen.heightPixels;
             this.nativeView.setLayoutParams(params);
+        }
+
+        if (this.views.size == 4) {
+
+            let params = this.nativeView.getLayoutParams();
+            params.height = screen.mainScreen.heightPixels / 4;
+            params.width = screen.mainScreen.widthPixels / 4;
+            this.nativeView.setLayoutParams(params);
+
+            this.views.forEach((value, key) => {
+                value.width = screen.mainScreen.heightPixels / 4;
+                value.height = screen.mainScreen.widthPixels / 4;
+            });
         }
     }
 
