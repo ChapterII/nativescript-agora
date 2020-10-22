@@ -17,10 +17,10 @@ export class RtcEngine extends RtcEngineCommon {
     public create(appId): void {
 
         this.engineEventListener = new EngineEventListener(this);
-        
+
         this.engine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
         this.engine.enableDualStreamMode(true);
-        
+
         if (this.channelProfile) {
             this.engine.setChannelProfile(this.channelProfile);
         }
@@ -70,6 +70,10 @@ export class RtcEngine extends RtcEngineCommon {
         this.engine.leaveChannel();
     }
 
+    public destroy(): void {
+        io.agora.rtc.RtcEngine.destroy();
+    }
+    
     public renewToken(token: string): void {
         this.engine.renewToken(token);
     }
@@ -276,6 +280,6 @@ export class RtcEngine extends RtcEngineCommon {
     public stopAudioMixing(): void {
         this.engine.stopAudioMixing();
     }
-    
+
 
 }

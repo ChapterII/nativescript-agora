@@ -1,25 +1,20 @@
-<StackLayout>
+<GridLayout rows="*">
+    <StackLayout row="0">
 
-  
-    <RtcView viewMode="video" remoteContainerId="remoteContainer" > </RtcView>    
-  
-    <FlexboxLayout id="remoteContainer"  alignItems="stretch" > </FlexboxLayout>  
-                        
-    <!-- <Placeholder (creatingView)="onCreatingRemoteView($event)" style="height: 50%;" class="calling"></Placeholder> -->
-     
-      
-    <!-- <RtcView streamMode="remote"  style="height:50%"> </RtcView> -->
-    <!-- <RtcView streamMode="remote" style="height:50%"> </RtcView> -->
+        <RtcView viewMode="video" (RtcEngineLoaded)="onLoadRtcEngine($event)" remoteContainerId="remoteContainer">
+        </RtcView>
+        <FlexboxLayout id="remoteContainer" alignItems="stretch"> </FlexboxLayout>
 
+    </StackLayout>
 
-    <!-- <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
+    <FlexboxLayout row="1" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
         <StackLayout>
             <StackLayout [class]="isMuted ? 'microphone-mute-button-muted' : 'microphone-mute-button'" (tap)="mute()">
                 <Label [visibility]="!isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe029;"
                     textWrap="true"></Label>
                 <Label [visibility]="isMuted ? 'visible' : 'collapsed'" class="mdi" text="&#xe02b;"
                     textWrap="true"></Label>
-            </StackLayout>  
+            </StackLayout>
             <label class="text-center" text="mute"></label>
         </StackLayout>
         <StackLayout>
@@ -27,7 +22,7 @@
                 <Label class="mdi" text="&#xe41e;" textWrap="true"></Label>
             </StackLayout>
             <label class="text-center" text="flip"></label>
-        </StackLayout>  
+        </StackLayout>
         <StackLayout>
             <StackLayout class="end-call-button" (tap)="endCall()">
                 <Label class="mdi" text="&#xe0b1;" textWrap="true"></Label>
@@ -44,18 +39,5 @@
             </StackLayout>
             <label class="text-center" text="camera"></label>
         </StackLayout>
-    </FlexboxLayout> -->
-    <!-- <Button text="Send Call!" (tap)="onSendCall()"></Button>
-    <Button text="Cancel Call!" (tap)="onCancelCall()"></Button>
-    <Button text="Answer Call" (tap)="onAnswerCall()"></Button>
-    <Button text="Reject Call" (tap)="onRejectCall()"></Button>
-
-    <StackLayout orientation="horizontal">
-        <label style="font-size: 20;margin: 10;" text="Caller ID:"></label>
-        <label style="font-size: 20;margin: 10;" [text]="userId"></label>
-    </StackLayout>  
-  
-    <TextField name="code" hint="Enter text" [(ngModel)]="code" color="orangered" backgroundColor="lightyellow" style="height: 40;"></TextField> -->
-
-
-</StackLayout>
+    </FlexboxLayout>
+</GridLayout>

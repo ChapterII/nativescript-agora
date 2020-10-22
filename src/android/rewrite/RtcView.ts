@@ -13,27 +13,26 @@ import { screen } from "tns-core-modules/platform";
 
 export type viewMode = 'video' | 'audio';
 
-
 export const remoteContainerIdProperty = new Property({
     name: "remoteContainerId"
 });
 
-export const viewModeProperty = new Property({
+export const viewModeProperty = new Property<RtcView, viewMode>({
     name: "viewMode"
 });
-
-export interface RtcView {
-    on(eventNames: string, callback: (args: EventData) => void);
-    on(event: 'onEnable', callback: (args: EventData) => void);
-}
 
 
 export class RtcView extends View {
 
+    public static onLoadRtcEngineEvent = 'RtcEngineLoaded';
 
-    engine: RtcEngine;
-    private viewModel: viewMode;
+    private engine: RtcEngine;
     private remoteContainerId: string;
+    private maxViewNumber = 3;
+    private views: Map<number, StackLayout> = new Map();
+    public nativeView: android.widget.FrameLayout;
+    private viewMode: viewMode;
+    private localSurfaceView: android.view.SurfaceView;
 
     constructor() {
 
@@ -43,8 +42,6 @@ export class RtcView extends View {
         this.engine.channelProfile = ChannelProfile.Communication;
         this.engine.clientRole = ClientRole.Audience;
         this.engine.create(APP_KEY);
-
-
 
         RtcEventHandler.on("onRemoteVideoStateChanged", (data) => {
 
@@ -58,93 +55,88 @@ export class RtcView extends View {
 
         });
 
+
+
     }
-
-
-    nativeView: android.widget.FrameLayout;
 
     public createNativeView() {
 
-        console.log(this.viewModel);
-
         this.nativeView = new android.widget.FrameLayout(this._context);
+
+        const owner = new WeakRef(this.engine);
+        this.notify({
+            eventName: 'RtcEngineLoaded',
+            object: this,
+            engine: owner.get(),
+            view: this
+        });
 
         permissions.requestPermissions(VIDEO_REQUESTED_PERMISSIONS).then(x => {
 
             getJSON(TOKEN_AGORA).then((res: any) => {
 
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
-                this.engine.enableVideo();
-                this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
-                let userId = parseInt(Math.floor(Math.random() * 10000).toString());
 
-                // if (this.streamMode == 'local') {
-                this.setupLocalVideo(userId);
-                // }
-
+                if (this.viewMode == 'video') {
+                    this.engine.enableVideo();
+                    this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
+                    let userId = parseInt(Math.floor(Math.random() * 10000).toString());
+                    this.setupLocalVideo(userId);
+                }
             });
         });
+
+        let params = this.nativeView.getLayoutParams();
+        if (params) {
+            params.height = screen.mainScreen.heightPixels;
+            params.width = screen.mainScreen.widthPixels;
+            this.nativeView.setLayoutParams(params);
+        }
 
         return this.nativeView;
     }
 
     public initNativeView() {
 
+        this.page.actionBarHidden = true;
         Application.on(Application.suspendEvent, (args) => {
-            io.agora.rtc.RtcEngine.destroy();
+            this.engine.destroy();
         });
 
-        this.page.actionBarHidden = true;
-    }
-
-    private setupLocalVideo(uid: number): void {
-        let mLocalView = io.agora.rtc.RtcEngine.CreateRendererView(appModule.android.context);
-        mLocalView.setZOrderMediaOverlay(true);
-        this.engine.setupLocalVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, uid);
-        mLocalView.setTag(String(uid));
-        this.nativeView.addView(mLocalView);
     }
 
     disposeNativeView() {
-        io.agora.rtc.RtcEngine.destroy();
+        this.engine.destroy();
     }
 
-    private views: Map<number, StackLayout> = new Map();
+    public setupLocalVideo(): void {
+        let mLocalView = io.agora.rtc.RtcEngine.CreateRendererView(appModule.android.context);
+        mLocalView.setZOrderMediaOverlay(true);
+        this.engine.setupLocalVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, 0);
+        // mLocalView.setTag(String(uid));
+        this.localSurfaceView = mLocalView;
+        this.nativeView.addView(mLocalView);
+    }
 
+    public removeLocalView() {
+        this.nativeView.removeView(this.localSurfaceView);
+    }
 
     removeRemoteVideo(uid) {
 
         let view = this.views.get(uid);
-
         if (view) {
             var viewContainer = <FlexboxLayout>this.page.getViewById(this.remoteContainerId);
             viewContainer.removeChild(view);
             this.views.delete(uid);
         }
+        this.adjustNativeViewHeightAndWidth(this.views.size);
 
-        if (this.views.size == 0) {
-            let params = this.nativeView.getLayoutParams();
-            params.height = screen.mainScreen.heightPixels;
-            this.nativeView.setLayoutParams(params);
-        }
-
-        if (this.views.size == 4) {
-
-            let params = this.nativeView.getLayoutParams();
-            params.height = screen.mainScreen.heightPixels / 4;
-            params.width = screen.mainScreen.widthPixels / 4;
-            this.nativeView.setLayoutParams(params);
-
-            this.views.forEach((value, key) => {
-                value.width = screen.mainScreen.heightPixels / 4;
-                value.height = screen.mainScreen.widthPixels / 4;
-            });
-        }
     }
 
     private setupRemoteVideo(uid: number): void {
 
-        if (!this.remoteContainerId && !this.page) {
+        if (this.views.size == this.maxViewNumber) {
             return;
         }
 
@@ -153,9 +145,9 @@ export class RtcView extends View {
             return;
         }
 
-        let params = this.nativeView.getLayoutParams();
-        params.height = screen.mainScreen.heightPixels / 2;
-        this.nativeView.setLayoutParams(params);
+        if (!this.remoteContainerId || !this.page.getViewById) {
+            return;
+        }
 
 
         this.engine.enableVideo();
@@ -177,10 +169,39 @@ export class RtcView extends View {
         viewContainer.addChild(stackLayout);
         this.views.set(uid, stackLayout);
 
+        this.adjustNativeViewHeightAndWidth(this.views.size);
+
     }
 
+    private adjustNativeViewHeightAndWidth(viewCount: number) {
+
+        if (viewCount == 0) {
+            let params = this.nativeView.getLayoutParams();
+            if (params) {
+                params.height = screen.mainScreen.heightPixels;
+                params.width = screen.mainScreen.widthPixels;
+                this.nativeView.setLayoutParams(params);
+            }
+        }
+
+        if (viewCount > 0) {
+            let params = this.nativeView.getLayoutParams();
+            if (params) {
+                params.height = screen.mainScreen.heightPixels / 2;
+                this.nativeView.setLayoutParams(params);
+            }
+        }
+
+    }
 
 }
+
+
+export interface RtcView {
+    on(eventNames: string, callback: (args: EventData) => void);
+    on(event: 'tap', callback: (args: EventData) => void);
+}
+
 
 viewModeProperty.register(RtcView);
 remoteContainerIdProperty.register(RtcView);

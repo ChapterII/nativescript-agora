@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { registerElement } from "nativescript-angular/element-registry";
 import { Application, FlexboxLayout, Page, Placeholder, StackLayout } from "tns-core-modules";
 import { RtcView } from "../../../../src/agora.android";
@@ -21,9 +21,18 @@ export class CallingCommponent implements OnInit {
 
     isMuted: boolean = false;
     isHideVideo: boolean = false;
+    private isVideoHide: boolean = false;
+
+
+    @ViewChild('RtcView', { static: true }) rtcView: RtcView;;
 
     constructor(private page: Page) {
     }
+
+
+    // switchCamera(){
+    //     alert('hi');
+    // }
 
     ngOnInit(): void {
 
@@ -95,20 +104,36 @@ export class CallingCommponent implements OnInit {
         // });
     }
 
+    engine: RtcEngine;
+    view: RtcView;
 
-
-    public onEnable(event) {
-        console.log('SAEB');
+    public onLoadRtcEngine(args) {
+        this.engine = args.engine;
+        this.rtcView = args.view;
     }
 
     switchCamera() {
-        console.log("SAEB: switchCamera");
+        this.engine.switchCamera();
+    }
 
-        // this..onSwitchCameraClicked();
+
+    mute() {
+        this.isMuted = !this.isMuted;
+        this.engine.muteLocalAudioStream(this.isMuted);
+        return this.isMuted;
     }
 
     hideVideo() {
-        // this.isHideVideo = this.agora.onVideoMuteClicked();
+        this.isVideoHide = !this.isVideoHide;
+
+        if (this.isVideoHide) {
+            this.view.removeLocalView();
+            this.engine.enableLocalVideo(false);
+        } else {
+            this.engine.enableLocalVideo(true);
+            this.view.setupLocalVideo();
+        }
+        return this.isVideoHide;
     }
 
     endCall() {

@@ -1,0 +1,65 @@
+.microphone-mute-button {
+    border-radius: 100%;
+    background-color: white;
+    width: 50;
+    height: 50;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24;
+}
+
+.microphone-mute-button-muted {
+    border-radius: 100%;
+    background-color: blue;
+    color: white;
+    width: 50;
+    height: 50;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24;
+}
+
+.switch-camera-button {
+    border-radius: 100%;
+    background-color: white;
+    width: 50;
+    height: 50;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24;
+}
+
+.end-call-button {
+    border-radius: 100%;
+    background-color: red;
+    color: white;
+    width: 50;
+    height: 50;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24;
+}
+
+.hide-video-button {
+    border-radius: 100%;
+    background-color: white;
+    width: 50;
+    height: 50;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 24;
+}
+
+
+.calling{
+    height: 100%;width: 100%;
+    background-color: gray;
+    background-image: url('~/images/pin.jpg');
+    background-repeat: no-repeat;
+    background-position:center;
+}
+
+.text-center{
+    color: white;
+    font-weight: bold;
+}
