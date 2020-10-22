@@ -74,14 +74,14 @@ export class RtcView extends View {
         permissions.requestPermissions(VIDEO_REQUESTED_PERMISSIONS).then(x => {
 
             getJSON(TOKEN_AGORA).then((res: any) => {
-
+                this.engine.setDefaultAudioRoutetoSpeakerphone(true);
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
-
                 if (this.viewMode == 'video') {
                     this.engine.enableVideo();
                     this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
-                    let userId = parseInt(Math.floor(Math.random() * 10000).toString());
-                    this.setupLocalVideo(userId);
+                    // let userId = parseInt(Math.floor(Math.random() * 10000).toString());
+                    
+                    this.setupLocalVideo();
                 }
             });
         });

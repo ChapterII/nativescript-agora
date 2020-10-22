@@ -281,5 +281,8 @@ export class RtcEngine extends RtcEngineCommon {
         this.engine.stopAudioMixing();
     }
 
+    public setDefaultAudioRoutetoSpeakerphone(isSpeaker:boolean):void {
+        this.engine.setDefaultAudioRoutetoSpeakerphone(isSpeaker);
+    }
 
 }
