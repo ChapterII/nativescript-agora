@@ -109,7 +109,7 @@ export class CallingCommponent implements OnInit {
 
     public onLoadRtcEngine(args) {
         this.engine = args.engine;
-        this.rtcView = args.view;
+        this.view = args.view;
     }
 
     switchCamera() {
@@ -127,7 +127,7 @@ export class CallingCommponent implements OnInit {
         this.isVideoHide = !this.isVideoHide;
 
         if (this.isVideoHide) {
-            this.view.removeLocalView();
+            this.view.removeLocalVideo();
             this.engine.enableLocalVideo(false);
         } else {
             this.engine.enableLocalVideo(true);
