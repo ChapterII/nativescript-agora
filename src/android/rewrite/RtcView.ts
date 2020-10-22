@@ -80,7 +80,7 @@ export class RtcView extends View {
                     this.engine.enableVideo();
                     this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
                     // let userId = parseInt(Math.floor(Math.random() * 10000).toString());
-                    
+
                     this.setupLocalVideo();
                 }
             });
@@ -118,7 +118,7 @@ export class RtcView extends View {
         this.nativeView.addView(mLocalView);
     }
 
-    public removeLocalView() {
+    public removeLocalVideo(): void {
         this.nativeView.removeView(this.localSurfaceView);
     }
 
