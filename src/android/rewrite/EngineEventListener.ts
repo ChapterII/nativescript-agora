@@ -19,16 +19,17 @@ export class EngineEventListener extends io.agora.rtc.IRtcEngineEventHandler {
         //     console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_STOPPED")
         // } else if (state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
         //     console.log("onRemoteVideoStateChanged: REMOTE_VIDEO_STATE_DECODING")  
-
+  
         // }
-        const owner = this.owner.get();
-        if (owner) {
-            owner.notify({ eventName: RtcEngine.onRemoteVideoSetupChangeEvent, object: owner, value: { uid: uid, elapsed: elapsed, state: state, reason: reason } });
-        }
-        // RtcEngineEventHandlerObservable.getInstance().notifyChanges(
-        //     'onRemoteVideoStateChanged',
-        //     { uid: uid, elapsed: elapsed }
-        // );
+        // const owner = this.owner.get();
+        // if (owner) {
+        //     owner.notify({ eventName: RtcEngine.onRemoteVideoSetupChangeEvent, object: owner, value: { uid: uid, elapsed: elapsed, state: state, reason: reason } });
+        // }
+
+        RtcEngineEventHandlerObservable.getInstance().notifyChanges(
+            'onRemoteVideoStateChanged',
+           { uid: uid, elapsed: elapsed, state: state, reason: reason }
+        );
 
     }
 

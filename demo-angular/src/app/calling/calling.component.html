@@ -1,9 +1,17 @@
 <StackLayout>
 
-    <RtcView streamMode="local"  style="height:50%"> </RtcView>
-    <RtcView streamMode="remote" style="height:50%"> </RtcView>
-       
- 
+  
+    <RtcView viewMode="video" remoteContainerId="remoteContainer" > </RtcView>    
+  
+    <FlexboxLayout id="remoteContainer"  alignItems="stretch" > </FlexboxLayout>  
+                        
+    <!-- <Placeholder (creatingView)="onCreatingRemoteView($event)" style="height: 50%;" class="calling"></Placeholder> -->
+     
+      
+    <!-- <RtcView streamMode="remote"  style="height:50%"> </RtcView> -->
+    <!-- <RtcView streamMode="remote" style="height:50%"> </RtcView> -->
+
+
     <!-- <FlexboxLayout row="0" style="vertical-align: bottom;margin:20;width: 90%;" justifyContent="space-between">
         <StackLayout>
             <StackLayout [class]="isMuted ? 'microphone-mute-button-muted' : 'microphone-mute-button'" (tap)="mute()">
