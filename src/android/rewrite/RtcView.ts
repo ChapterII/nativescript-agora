@@ -90,7 +90,7 @@ export class RtcView extends View {
 
     public initNativeView() {
 
-        Application.on(Application.exitEvent, (args) => {
+        Application.on(Application.suspendEvent, (args) => {
             io.agora.rtc.RtcEngine.destroy();
         });   
 
@@ -98,8 +98,6 @@ export class RtcView extends View {
     }
 
     private setupLocalVideo(uid: number): void {
-        this.engine.enableVideo();
-        this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
         let mLocalView = io.agora.rtc.RtcEngine.CreateRendererView(appModule.android.context);
         mLocalView.setZOrderMediaOverlay(true);
         this.engine.setupLocalVideo(mLocalView, io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN, uid);
