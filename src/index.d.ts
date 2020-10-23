@@ -1,6 +1,9 @@
 import { Calling } from 'nativescript-agora/android/calling';
 import { Common } from './agora.common';
 
+export * from './android/rewrite/RtcView';
+export * from './android/rewrite/RtcRemoteViewContainer';
+
 export declare class Agora extends Common {
   initializeAgoraEngine(uiView?): void;
   initializeAgoraVoiceEngine(callback: (userId: number) => void): void;

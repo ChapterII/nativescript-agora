@@ -8,11 +8,10 @@ import * as permissions from "nativescript-permissions";
 import { VIDEO_REQUESTED_PERMISSIONS } from "../permissions";
 import { VideoEncoderConfiguration } from "./Classes";
 import { Property } from "tns-core-modules/ui/core/properties";
-import { RtcEventHandler } from "./RtcEventHandler";
 import { screen } from "tns-core-modules/platform";
 
 export type viewMode = 'video' | 'audio';
-
+  
 export const remoteContainerIdProperty = new Property({
     name: "remoteContainerId"
 });
@@ -43,14 +42,12 @@ export class RtcView extends View {
         this.engine.clientRole = ClientRole.Audience;
         this.engine.create(APP_KEY);
 
-        RtcEventHandler.on("onRemoteVideoStateChanged", (data) => {
+        this.engine.on(RtcEngine.onRemoteVideoStateChangedEvent, (args: any) => {
 
-            const value = data.value;
-            if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
-                this.removeRemoteVideo(value.uid);
-            } else if (value.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
-                console.log("User Decoding");
-                this.setupRemoteVideo(value.uid);
+            if (args.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_STOPPED) {
+                this.removeRemoteVideo(args.uid);
+            } else if (args.state == io.agora.rtc.Constants.REMOTE_VIDEO_STATE_DECODING) {
+                this.setupRemoteVideo(args.uid);
             }
 
         });
@@ -65,7 +62,7 @@ export class RtcView extends View {
 
         const owner = new WeakRef(this.engine);
         this.notify({
-            eventName: 'RtcEngineLoaded',
+            eventName: RtcView.onLoadRtcEngineEvent,
             object: this,
             engine: owner.get(),
             view: this
@@ -74,8 +71,11 @@ export class RtcView extends View {
         permissions.requestPermissions(VIDEO_REQUESTED_PERMISSIONS).then(x => {
 
             getJSON(TOKEN_AGORA).then((res: any) => {
+
                 this.engine.setDefaultAudioRoutetoSpeakerphone(true);
                 this.engine.joinChannel(res.key, DEFAULT_CHANNNEL, "Extra Optional Data", 0);
+                this.engine.enableDualStreamMode(true);
+                
                 if (this.viewMode == 'video') {
                     this.engine.enableVideo();
                     this.engine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(BitRate.Standard));
@@ -83,7 +83,7 @@ export class RtcView extends View {
 
                     this.setupLocalVideo();
                 }
-            });
+            });  
         });
 
         let params = this.nativeView.getLayoutParams();
@@ -122,7 +122,7 @@ export class RtcView extends View {
         this.nativeView.removeView(this.localSurfaceView);
     }
 
-    removeRemoteVideo(uid) {
+    public removeRemoteVideo(uid): void {
 
         let view = this.views.get(uid);
         if (view) {
@@ -193,15 +193,7 @@ export class RtcView extends View {
         }
 
     }
-
 }
-
-
-export interface RtcView {
-    on(eventNames: string, callback: (args: EventData) => void);
-    on(event: 'tap', callback: (args: EventData) => void);
-}
-
 
 viewModeProperty.register(RtcView);
 remoteContainerIdProperty.register(RtcView);

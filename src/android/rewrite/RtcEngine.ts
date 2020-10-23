@@ -1,7 +1,7 @@
-import { Application, EventData } from "tns-core-modules";
+import { Application } from "tns-core-modules";
 import { BeautyOptions, UserInfo, VideoEncoderConfiguration } from "./Classes";
 import { EngineEventListener } from "./EngineEventListener";
-import { AudioProfile, AudioScenario, ChannelProfile, ClientRole, ConnectionStateType, LogFilter, VideoOutputOrientationMode } from "./Enum";
+import { AudioProfile, AudioScenario, ConnectionStateType, LogFilter } from "./Enum";
 import { RtcEngineCommon } from "./RtcEngineCommon";
 
 type Rate = 1 | 2 | 3 | 4 | 5;
@@ -9,34 +9,67 @@ type Rate = 1 | 2 | 3 | 4 | 5;
 
 export class RtcEngine extends RtcEngineCommon {
 
-    engine: io.agora.rtc.RtcEngine;
+    public static onJoinChannelSuccessEvent = 'joinChannelSuccess';
+    public static onUserOfflineEvent = 'userOffline';
+    public static onConnectionStateChangedEvent = 'connectionStateChanged';
+    public static onPeersOnlineStatusChangedEvent = 'peersOnlineStatusChanged';
+    public static onLocalInvitationReceivedByPeerEvent = 'localInvitationReceivedByPeer';
+    public static onLocalInvitationAcceptedEvent = 'localInvitationAccepted';
+    public static onLocalInvitationRefusedEvent = 'localInvitationRefused';
+    public static onLocalInvitationCanceledEvent = 'localInvitationCanceled';
+    public static onLocalInvitationFailureEvent = 'localInvitationFailure';
+    public static onRemoteInvitationCanceledEvent = 'remoteInvitationCanceled';
+    public static onRemoteInvitationReceivedEvent = 'remoteInvitationReceived';
+    public static onRemoteInvitationAcceptedEvent = 'remoteInvitationAccepted';
+    public static onRemoteInvitationFailureevent = 'remoteInvitationFailure';
+    public static onRemoteInvitationRefusedEvent = 'remoteInvitationRefused';
+    public static onMediaUploadingProgressEvent = 'mediaUploadingProgress';
+    public static onUserJoinedEvent = 'userJoined';
+    public static onFileMessageReceivedFromPeerEvent = 'fileMessageReceivedFromPeer';
+    public static onMessageReceivedEvent = 'messageReceived';
+    public static onRemoteVideoStateChangedEvent = 'remoteVideoStateChanged';
+    public static onTokenExpiredEvent = 'tokenExpired';
+    public static onMediaDownloadingProgressEvent = 'mediaDownloadingProgress';
+    public static onImageMessageReceivedFromPeerEvent = 'imageMessageReceivedFromPeer';
+    public static onTokenPrivilegeWillExpireEvent = 'tokenPrivilegeWillExpire';
+
+
+    rtcEngine: io.agora.rtc.RtcEngine;
     engineEventListener: EngineEventListener;
 
-    public static onRemoteVideoSetupChangeEvent = 'onRemoteVideoSetup';
+
+    constructor() {
+        super();
+    }
+
 
     public create(appId): void {
 
         this.engineEventListener = new EngineEventListener(this);
-
-        this.engine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
-        this.engine.enableDualStreamMode(true);
+        this.rtcEngine = io.agora.rtc.RtcEngine.create(Application.android.context, appId, this.engineEventListener);
 
         if (this.channelProfile) {
-            this.engine.setChannelProfile(this.channelProfile);
+            this.rtcEngine.setChannelProfile(this.channelProfile);
         }
 
         if (this.clientRole) {
-            this.engine.setClientRole(this.clientRole);
+            this.rtcEngine.setClientRole(this.clientRole);
         }
 
     }
+
+
+    enableDualStreamMode(param0: boolean): void {
+        this.rtcEngine.enableDualStreamMode(param0);
+    }
+
     public CreateRendererView(context: any): android.view.SurfaceView {
         return io.agora.rtc.RtcEngine.CreateRendererView(context);
     }
 
     public setupLocalVideo(view: globalAndroid.view.View, renderMode: number, uid: number): void {
 
-        this.engine.setupLocalVideo(new io.agora.rtc.video.VideoCanvas(
+        this.rtcEngine.setupLocalVideo(new io.agora.rtc.video.VideoCanvas(
             view,
             io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN,
             uid)
@@ -46,7 +79,7 @@ export class RtcEngine extends RtcEngineCommon {
 
     public setupRemoteVideo(view: globalAndroid.view.View, renderMode: number, uid: number): void {
 
-        this.engine.setupRemoteVideo(new io.agora.rtc.video.VideoCanvas(
+        this.rtcEngine.setupRemoteVideo(new io.agora.rtc.video.VideoCanvas(
             view,
             io.agora.rtc.video.VideoCanvas.RENDER_MODE_HIDDEN,
             uid)
@@ -55,165 +88,165 @@ export class RtcEngine extends RtcEngineCommon {
 
 
     public switchCamera(): void {
-        this.engine.switchCamera();
+        this.rtcEngine.switchCamera();
     }
 
     public joinChannel(token: string | null, channelName: string, optionalInfo: string | null, optionalUid: number): void {
-        this.engine.joinChannel(token, channelName, optionalInfo, optionalUid);
+        this.rtcEngine.joinChannel(token, channelName, optionalInfo, optionalUid);
     }
 
     public switchChannel(token: string | null, channelName: string): void {
-        this.engine.switchChannel(token, channelName);
+        this.rtcEngine.switchChannel(token, channelName);
     }
 
     public leaveChannel(): void {
-        this.engine.leaveChannel();
+        this.rtcEngine.leaveChannel();
     }
 
     public destroy(): void {
         io.agora.rtc.RtcEngine.destroy();
     }
-    
+
     public renewToken(token: string): void {
-        this.engine.renewToken(token);
+        this.rtcEngine.renewToken(token);
     }
 
     public enableWebSdkInteroperability(enabled: boolean): void {
-        this.engine.enableWebSdkInteroperability(enabled);
+        this.rtcEngine.enableWebSdkInteroperability(enabled);
     }
 
     public getConnectionState(): ConnectionStateType {
-        return this.engine.getConnectionState();
+        return this.rtcEngine.getConnectionState();
     }
 
     public getCallId(): string {
-        return this.engine.getCallId();
+        return this.rtcEngine.getCallId();
     }
 
     public rate(callId: string, rating: Rate, description?: string): void {
-        this.engine.rate(callId, rating, description);
+        this.rtcEngine.rate(callId, rating, description);
     }
 
     public complain(callId: string, description: string): void {
-        this.engine.complain(callId, description);
+        this.rtcEngine.complain(callId, description);
     }
 
     public setLogFile(filePath: string): void {
-        this.engine.setLogFile(filePath);
+        this.rtcEngine.setLogFile(filePath);
     }
 
     public setLogFilter(filter: LogFilter): void {
-        this.engine.setLogFilter(filter);
+        this.rtcEngine.setLogFilter(filter);
     }
 
     public setLogFileSize(fileSizeInKBytes: number): void {
-        this.engine.setLogFileSize(fileSizeInKBytes);
+        this.rtcEngine.setLogFileSize(fileSizeInKBytes);
     }
 
     public setParameters(parameters: string): void {
-        this.engine.setParameters(parameters);
+        this.rtcEngine.setParameters(parameters);
     }
 
     public getUserInfoByUid(uid: number, user: UserInfo): number {
-        return this.engine.getUserInfoByUid(uid, user);
+        return this.rtcEngine.getUserInfoByUid(uid, user);
     }
 
     public getUserInfoByUserAccount(userAccount: string, user: UserInfo): number {
-        return this.engine.getUserInfoByUserAccount(userAccount, user);
+        return this.rtcEngine.getUserInfoByUserAccount(userAccount, user);
     }
 
     public registerLocalUserAccount(appId: string, userAccount: string): void {
-        this.engine.registerLocalUserAccount(appId, userAccount)
+        this.rtcEngine.registerLocalUserAccount(appId, userAccount)
     }
 
     public joinChannelWithUserAccount(token: string | null, channelName: string, userAccount: string): void {
-        this.engine.joinChannelWithUserAccount(token, channelName, userAccount)
+        this.rtcEngine.joinChannelWithUserAccount(token, channelName, userAccount)
     }
 
     public adjustPlaybackSignalVolume(volume: number): void {
-        this.engine.adjustPlaybackSignalVolume(volume);
+        this.rtcEngine.adjustPlaybackSignalVolume(volume);
     }
 
     public adjustRecordingSignalVolume(volume: number): void {
-        this.engine.adjustRecordingSignalVolume(volume)
+        this.rtcEngine.adjustRecordingSignalVolume(volume)
     }
 
     public adjustUserPlaybackSignalVolume(uid: number, volume: number): void {
-        this.engine.adjustUserPlaybackSignalVolume(uid, volume)
+        this.rtcEngine.adjustUserPlaybackSignalVolume(uid, volume)
     }
 
     public disableAudio(): void {
-        this.engine.disableAudio();
+        this.rtcEngine.disableAudio();
     }
 
     public enableAudio(): void {
-        this.engine.enableAudio();
+        this.rtcEngine.enableAudio();
     }
 
     public enableAudioVolumeIndication(interval: number, smooth: number, report_vad: boolean): void {
-        this.engine.enableAudioVolumeIndication(interval, smooth, report_vad);
+        this.rtcEngine.enableAudioVolumeIndication(interval, smooth, report_vad);
     }
 
     public enableLocalAudio(enabled: boolean): void {
-        this.engine.enableLocalAudio(enabled);
+        this.rtcEngine.enableLocalAudio(enabled);
     }
 
     public muteAllRemoteAudioStreams(muted: boolean): void {
-        this.engine.muteAllRemoteAudioStreams(muted);
+        this.rtcEngine.muteAllRemoteAudioStreams(muted);
     }
 
     public muteLocalAudioStream(muted: boolean): void {
-        this.engine.muteLocalAudioStream(muted);
+        this.rtcEngine.muteLocalAudioStream(muted);
     }
 
     public muteRemoteAudioStream(uid: number, muted: boolean): void {
-        this.engine.muteRemoteAudioStream(uid, muted);
+        this.rtcEngine.muteRemoteAudioStream(uid, muted);
     }
 
     public setAudioProfile(profile: AudioProfile, scenario: AudioScenario): void {
-        this.engine.setAudioProfile(profile, scenario);
+        this.rtcEngine.setAudioProfile(profile, scenario);
     }
 
     public setDefaultMuteAllRemoteAudioStreams(muted: boolean): void {
-        this.engine.setDefaultMuteAllRemoteAudioStreams(muted);
+        this.rtcEngine.setDefaultMuteAllRemoteAudioStreams(muted);
     }
 
     public disableVideo(): void {
-        this.engine.disableVideo();
+        this.rtcEngine.disableVideo();
     }
 
     public enableLocalVideo(enabled: boolean): void {
-        this.engine.enableLocalVideo(enabled);
+        this.rtcEngine.enableLocalVideo(enabled);
     }
 
     public enableVideo(): void {
-        this.engine.enableVideo();
+        this.rtcEngine.enableVideo();
     }
 
     public muteAllRemoteVideoStreams(muted: boolean): void {
-        this.engine.muteAllRemoteVideoStreams(muted);
+        this.rtcEngine.muteAllRemoteVideoStreams(muted);
     }
 
     public muteLocalVideoStream(muted: boolean): void {
-        this.engine.muteLocalVideoStream(muted);
+        this.rtcEngine.muteLocalVideoStream(muted);
     }
 
     public muteRemoteVideoStream(uid: number, muted: boolean): void {
-        this.engine.muteRemoteVideoStream(uid, muted);
+        this.rtcEngine.muteRemoteVideoStream(uid, muted);
     }
 
     public setBeautyEffectOptions(enabled: boolean, options: BeautyOptions): void {
-        this.engine.setBeautyEffectOptions(enabled, options);
+        this.rtcEngine.setBeautyEffectOptions(enabled, options);
     }
 
     public setDefaultMuteAllRemoteVideoStreams(muted: boolean): void {
-        this.engine.setDefaultMuteAllRemoteVideoStreams(muted);
+        this.rtcEngine.setDefaultMuteAllRemoteVideoStreams(muted);
     }
 
     // remark: review this code.
     public setVideoEncoderConfiguration(config: VideoEncoderConfiguration): number {
 
-        return this.engine.setVideoEncoderConfiguration(new io.agora.rtc.video.VideoEncoderConfiguration(
+        return this.rtcEngine.setVideoEncoderConfiguration(new io.agora.rtc.video.VideoEncoderConfiguration(
             io.agora.rtc.video.VideoEncoderConfiguration.VD_640x360,
             io.agora.rtc.video.VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
             config.bitrate,
@@ -222,67 +255,67 @@ export class RtcEngine extends RtcEngineCommon {
     }
 
     public startPreview(): void {
-        this.engine.startPreview();
+        this.rtcEngine.startPreview();
     }
 
     public stopPreview(): void {
-        this.engine.stopPreview();
+        this.rtcEngine.stopPreview();
     }
 
     public adjustAudioMixingPlayoutVolume(volume: number): void {
-        this.engine.adjustAudioMixingPlayoutVolume(volume);
+        this.rtcEngine.adjustAudioMixingPlayoutVolume(volume);
     }
 
     public adjustAudioMixingPublishVolume(volume: number): void {
-        this.engine.adjustAudioMixingPublishVolume(volume);
+        this.rtcEngine.adjustAudioMixingPublishVolume(volume);
     }
 
     public adjustAudioMixingVolume(volume: number): void {
-        this.engine.adjustAudioMixingVolume(volume);
+        this.rtcEngine.adjustAudioMixingVolume(volume);
     }
 
     public getAudioMixingCurrentPosition(): number {
-        return this.engine.getAudioMixingCurrentPosition();
+        return this.rtcEngine.getAudioMixingCurrentPosition();
     }
 
     public getAudioMixingDuration(): number {
-        return this.engine.getAudioMixingDuration();
+        return this.rtcEngine.getAudioMixingDuration();
     }
 
     public getAudioMixingPlayoutVolume(): number {
-        return this.engine.getAudioMixingPlayoutVolume();
+        return this.rtcEngine.getAudioMixingPlayoutVolume();
     }
 
     public getAudioMixingPublishVolume(): number {
-        return this.engine.getAudioMixingPublishVolume();
+        return this.rtcEngine.getAudioMixingPublishVolume();
     }
 
     public pauseAudioMixing(): void {
-        this.engine.pauseAudioMixing();
+        this.rtcEngine.pauseAudioMixing();
     }
 
     public resumeAudioMixing(): void {
-        this.engine.resumeAudioMixing();
+        this.rtcEngine.resumeAudioMixing();
     }
 
     public setAudioMixingPitch(pitch: number): void {
-        this.engine.setAudioMixingPitch(pitch);
+        this.rtcEngine.setAudioMixingPitch(pitch);
     }
 
     public setAudioMixingPosition(pos: number): void {
-        this.engine.setAudioMixingPosition(pos);
+        this.rtcEngine.setAudioMixingPosition(pos);
     }
 
     public startAudioMixing(filePath: string, loopback: boolean, replace: boolean, cycle: number): void {
-        this.engine.startAudioMixing(filePath, loopback, replace, cycle);
+        this.rtcEngine.startAudioMixing(filePath, loopback, replace, cycle);
     }
 
     public stopAudioMixing(): void {
-        this.engine.stopAudioMixing();
+        this.rtcEngine.stopAudioMixing();
     }
 
-    public setDefaultAudioRoutetoSpeakerphone(isSpeaker:boolean):void {
-        this.engine.setDefaultAudioRoutetoSpeakerphone(isSpeaker);
+    public setDefaultAudioRoutetoSpeakerphone(isSpeaker: boolean): void {
+        this.rtcEngine.setDefaultAudioRoutetoSpeakerphone(isSpeaker);
     }
 
 }

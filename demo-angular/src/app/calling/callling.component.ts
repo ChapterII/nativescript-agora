@@ -3,7 +3,6 @@ import { registerElement } from "nativescript-angular/element-registry";
 import { Application, FlexboxLayout, Page, Placeholder, StackLayout } from "tns-core-modules";
 import { RtcView } from "../../../../src/agora.android";
 import { RtcEngine } from "../../../../src/android/rewrite/RtcEngine";
-import { RtcEventHandler } from "../../../../src/android/rewrite/RtcEventHandler";
 registerElement("RtcView", () => require("nativescript-agora").RtcView);
 
 
@@ -137,7 +136,7 @@ export class CallingCommponent implements OnInit {
     }
 
     endCall() {
-        // this.agora.endCall();
+        this.engine.leaveChannel();
     }
 
 
