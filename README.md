@@ -11,6 +11,7 @@ Agora works base on WebRTC protocol.
 ## Features
 
 ### Prerequisites
+For using the plugin you should create an agora account in [console agora]. After logining into console you should create a project. Each project have own **AppID**. **AppID** is really important because you create RtcEngine by **AppID**. 
 
 ### Installation 
 
@@ -30,6 +31,5 @@ This software is under the MIT License (MIT).
 
 [Nativescript]: <http://nativescript.org>
 [Agora]: <http://agora.io>
-
-
+[console agora]: <https://console.agora.io/>
 
